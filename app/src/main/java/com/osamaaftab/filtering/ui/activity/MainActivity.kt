@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onShowProgress() {
+        progress!!.setCancelable(false)
         progress!!.show()
     }
 
