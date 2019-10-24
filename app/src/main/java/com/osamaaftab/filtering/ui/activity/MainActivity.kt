@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(),
     UserListContractor.IView,
     View.OnClickListener {
 
-
+    //added comments for testing CI
     override fun onCreateDialog() {
         dialog!!.setCancelable(true)
         dialog!!.setContentView(R.layout.layout_dialog)
