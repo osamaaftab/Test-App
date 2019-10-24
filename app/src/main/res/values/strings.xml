@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Filtering</string>
+
+
+    <string name="country_prompt">Choose a bound</string>
+    <string name="bullet">\u2022</string>
+
+    <string-array name="country_arrays">
+        <item>upper bound</item>
+        <item>lower bound</item>
+    </string-array>
+
+
+    <string name="text_favourite">Favourite :</string>
+    <string name="text_height">Height :</string>
+    <string name="text_score">score :</string>
+    <string name="text_contact">Contact Exchange :</string>
+    <string name="text_photo">Has Photo</string>
+    <string name="text_in_contact">In Contact</string>
+    <string name="text_Favourite">Favourite</string>
+    <string name="text_comp_score">Compatibility Score</string>
+    <string name="text_age">Age</string>
+    <string name="text_height_dup">Height</string>
+    <string name="text_dist">distance in km</string>
+    <string name="text_toolbar_title">Logged in as Sharon</string>
+    <string name="text_network_error">Network Error!!!</string>
+
+</resources>
