@@ -12,12 +12,11 @@ import org.junit.runner.RunWith
 import androidx.test.espresso.matcher.ViewMatchers.*
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import com.osamaaftab.filtering.ViewActions.ViewActions
 import com.osamaaftab.filtering.repository.remote.RecyclerViewMatcher
 import com.warkiz.widget.IndicatorSeekBar
@@ -45,17 +44,14 @@ class MainActivityTest {
     fun onFetchUserList() {
 
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.card_view))
+            .inRoot(not(isDialog()))
             .check(matches(isDisplayed()))
-
-        onView(withId(R.id.userList))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-
     }
 
     @Test
     fun onFilterListWithPhotoEnabled() {
-        onView(withId(R.id.filter))
-            .perform(click())
+
+        onView(withId(R.id.filter)).inRoot(not(isDialog())).perform(click())
 
         onView(withId(R.id.has_photo_switch))
             .perform(click())
@@ -71,8 +67,8 @@ class MainActivityTest {
 
     @Test
     fun onFilterListWithIsContactEnabled() {
-        onView(withId(R.id.filter))
-            .perform(click())
+        onView(withId(R.id.filter)).inRoot(not(isDialog())).perform(click())
+
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
@@ -88,8 +84,8 @@ class MainActivityTest {
 
     @Test
     fun onFilterListWithIsFavEnabled() {
-        onView(withId(R.id.filter))
-            .perform(click())
+        onView(withId(R.id.filter)).inRoot(not(isDialog())).perform(click())
+
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
@@ -115,8 +111,7 @@ class MainActivityTest {
         val currentLon = -1.778197
 
 
-        onView(withId(R.id.filter))
-            .perform(click())
+        onView(withId(R.id.filter)).inRoot(not(isDialog())).perform(click())
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
@@ -148,8 +143,7 @@ class MainActivityTest {
     @Test
     fun onFilterListWithScoreRange() {
 
-        onView(withId(R.id.filter))
-            .perform(click())
+        onView(withId(R.id.filter)).inRoot(not(isDialog())).perform(click())
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
@@ -175,8 +169,7 @@ class MainActivityTest {
     @Test
     fun onFilterListWithHeightRange() {
 
-        onView(withId(R.id.filter))
-            .perform(click())
+        onView(withId(R.id.filter)).inRoot(not(isDialog())).perform(click())
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
@@ -203,8 +196,7 @@ class MainActivityTest {
     @Test
     fun onFilterListWithAgeRange() {
 
-        onView(withId(R.id.filter))
-            .perform(click())
+        onView(withId(R.id.filter)).inRoot(not(isDialog())).perform(click())
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())

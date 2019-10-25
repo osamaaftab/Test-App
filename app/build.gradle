@@ -87,5 +87,8 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
+    debugImplementation 'com.android.support.test.espresso.idling:idling-concurrent:3.0.2'
+    debugImplementation 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0'
+
 
 }

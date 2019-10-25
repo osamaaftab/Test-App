@@ -1,6 +1,5 @@
 package com.osamaaftab.filtering.Interactor
 
-import android.os.AsyncTask
 import com.osamaaftab.filtering.contractor.UserListContractor
 import com.osamaaftab.filtering.repository.remote.UserServices
 import com.osamaaftab.filtering.ui.model.FilterModel
@@ -11,12 +10,10 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import io.reactivex.disposables.CompositeDisposable
 
-
 class UserListInteractor @Inject constructor(
     var userServices: UserServices,
     var filterModel: FilterModel,
-    var mDisposable: CompositeDisposable
-) :
+    var mDisposable: CompositeDisposable) :
     UserListContractor.IIntractor {
     override fun onDisposable() {
         mDisposable.clear()
@@ -25,7 +22,7 @@ class UserListInteractor @Inject constructor(
     override fun getResetUserListData(response: UserListContractor.IIntractor.OnResponse) {
         mDisposable.add(
             userServices.getUserList()
-                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<UserModel>() {
                     override fun onSuccess(list: UserModel) {
@@ -63,7 +60,7 @@ class UserListInteractor @Inject constructor(
 
         mDisposable.add(
             userServices.getUserFilterList(filterModel)
-                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<UserModel>() {
                     override fun onSuccess(list: UserModel) {
@@ -81,7 +78,7 @@ class UserListInteractor @Inject constructor(
     override fun getInitialUserListData(response: UserListContractor.IIntractor.OnResponse) {
         mDisposable.add(
             userServices.getUserList()
-                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<UserModel>() {
                     override fun onSuccess(list: UserModel) {

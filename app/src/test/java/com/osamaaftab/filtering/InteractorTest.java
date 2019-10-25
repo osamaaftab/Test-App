@@ -50,6 +50,7 @@ public class InteractorTest {
     @Mock
     FilterModel filterModel;
 
+
     @Mock
     CompositeDisposable compositeDisposable;
 
