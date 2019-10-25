@@ -6,5 +6,6 @@
             android:icon="@drawable/ic_filter"
             android:orderInCategory="100"
             app:showAsAction="always"
-            android:title="Filter" />
+            android:contentDescription="@string/text_filter_desc"
+            android:title="@string/text_filter_desc" />
 </menu>

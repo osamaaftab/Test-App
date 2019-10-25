@@ -4,6 +4,7 @@ import com.osamaaftab.filtering.Interactor.UserListInteractor;
 import com.osamaaftab.filtering.contractor.UserListContractor;
 import com.osamaaftab.filtering.repository.remote.UserServices;
 import com.osamaaftab.filtering.ui.model.FilterModel;
+import com.osamaaftab.filtering.ui.model.UserCity;
 import com.osamaaftab.filtering.ui.model.UserData;
 import com.osamaaftab.filtering.ui.model.UserModel;
 import io.reactivex.Scheduler;
@@ -269,10 +270,44 @@ public class InteractorTest {
         }
     }
 
+    @Test
+    public void onFilteredDataWithDistance() throws Exception {
+
+        ArrayList<UserData> epectedResponse = new ArrayList<>();
+        epectedResponse.add(new UserData("Caroline", "http://thecatapi.com/api/images/get?format=src&type=gif", 18, "Corporate Lawyer", 153, 0.76, 2, true, "Atheist", new UserCity("Leeds", 53.801277, -1.548567)));
+        epectedResponse.add(new UserData("Katherine", "http://thecatapi.com/api/images/get?format=src&type=gif", 19, "Corporate Lawyer", 153, 0.70, 2, true, "Atheist", new UserCity("London", 51.509865, -0.118092)));
+        UserModel userModelExpected = new UserModel(epectedResponse);
+
+        double radius = 160; // In Km
+        double lat = 52.412811;
+        double lon = -1.778197;
+
+        for (int i = 0; i < epectedResponse.size(); i++) {
+            assertThat(getDistanceFromLatLonInKm(userModelExpected.getMatches().get(i).getCity().getLat(), userModelExpected.getMatches().get(i).getCity().getLog(), lat, lon), lessThanOrEqualTo(radius));
+        }
+    }
+
 
     @Test
     public void onDistroy() throws Exception {
         userListInteractor.onDisposable();
         Mockito.verify(compositeDisposable, times(1)).clear();
+    }
+
+    private double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
+        double R = 6371; // Radius of the earth in km
+        double dLat = deg2rad(lat2 - lat1);  // deg2rad below
+        double dLon = deg2rad(lon2 - lon1);
+        double a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double d = R * c; // Distance in km
+        return d;
+    }
+
+    private double deg2rad(double deg) {
+        return deg * (Math.PI / 180);
     }
 }

@@ -16,12 +16,14 @@ import org.junit.Before
 import android.text.format.DateUtils
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import com.osamaaftab.filtering.repository.remote.ElapsedTimeIdlingResource
 import com.osamaaftab.filtering.repository.remote.RecyclerViewMatcher
 import org.hamcrest.CoreMatchers.not
+import com.osamaaftab.filtering.R
 
 
 @RunWith(AndroidJUnit4::class)
@@ -58,6 +60,8 @@ class MainActivityTest {
 
     @Test
     fun onFilterListWithPhotoEnabled() {
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
+        onWait(idlingResource)
         onView(withId(R.id.filter))
             .perform(click())
 
@@ -67,21 +71,29 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
+        onWait(idlingResource)
+        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture))
+            .check(matches(isDisplayed()))
+        onDeRegister(idlingResource)
 
+    }
+
+
+    private fun onWait(idlingResource: IdlingResource) {
         IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
         IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
 
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
         IdlingRegistry.getInstance().register(idlingResource)
+    }
 
-        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture))
-            .check(matches(isDisplayed()))
-
+    private fun onDeRegister(idlingResource: IdlingResource) {
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
     fun onFilterListWithIsContactEnabled() {
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
+        onWait(idlingResource)
         onView(withId(R.id.filter))
             .perform(click())
 
@@ -91,21 +103,16 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
-
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_contact))
             .check(matches(withText(not("0"))))
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
+        onDeRegister(idlingResource)
     }
 
     @Test
     fun onFilterListWithIsFavEnabled() {
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
+        onWait(idlingResource)
         onView(withId(R.id.filter))
             .perform(click())
 
@@ -118,17 +125,10 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
-
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_fav))
             .check(matches(withText(("true"))))
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
+        onDeRegister(idlingResource)
     }
 
 }
