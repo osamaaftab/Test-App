@@ -33,14 +33,12 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onHideProgress() {
-        //progress!!.dismiss()
+        progress!!.dismiss()
     }
 
     override fun onShowProgress() {
-        //progress!!.setCancelable(false)
-        // progress!!.show()
-        Toast.makeText(this, "Loading....", Toast.LENGTH_LONG).show()
-
+        progress!!.setCancelable(false)
+        progress!!.show()
     }
 
     override fun onHideDialog() {

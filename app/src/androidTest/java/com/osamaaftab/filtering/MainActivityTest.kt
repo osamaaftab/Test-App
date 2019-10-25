@@ -10,21 +10,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.espresso.IdlingPolicies
-import java.util.concurrent.TimeUnit
-import org.junit.Before
-import android.text.format.DateUtils
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import com.osamaaftab.filtering.ViewActions.ViewActions
-import com.osamaaftab.filtering.repository.remote.ElapsedTimeIdlingResource
 import com.osamaaftab.filtering.repository.remote.RecyclerViewMatcher
 import com.warkiz.widget.IndicatorSeekBar
 import org.hamcrest.CoreMatchers.allOf
@@ -46,28 +40,15 @@ class MainActivityTest {
     @get:Rule
     var activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
 
-    @Before
-    fun resetTimeout() {
-        IdlingPolicies.setMasterPolicyTimeout(60, TimeUnit.SECONDS)
-        IdlingPolicies.setIdlingResourceTimeout(26, TimeUnit.SECONDS)
-    }
 
     @Test
     fun onFetchUserList() {
-
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
 
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.card_view))
             .check(matches(isDisplayed()))
 
         onView(withId(R.id.userList))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-
-        IdlingRegistry.getInstance().unregister(idlingResource)
 
     }
 
@@ -83,16 +64,9 @@ class MainActivityTest {
             .perform(click())
 
 
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture))
             .check(matches(isDisplayed()))
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
@@ -107,16 +81,9 @@ class MainActivityTest {
             .perform(click())
 
 
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_contact))
             .check(matches(withText(not("0"))))
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
@@ -134,16 +101,9 @@ class MainActivityTest {
             .perform(click())
 
 
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_fav))
             .check(matches(withText(("true"))))
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
 
@@ -170,11 +130,6 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
 
         var lat = getText(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_lat))
         var lon = getText(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_lon))
@@ -187,7 +142,6 @@ class MainActivityTest {
                 currentLon
             ), lessThanOrEqualTo<Double>(radius)
         )
-        IdlingRegistry.getInstance().unregister(idlingResource)
 
     }
 
@@ -209,12 +163,6 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         var score = getText(
             RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_score)
         )
@@ -222,7 +170,6 @@ class MainActivityTest {
             score.toString().toDouble(), allOf(greaterThanOrEqualTo(5.0), lessThanOrEqualTo(95.0))
         )
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
@@ -243,12 +190,6 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         var height = getText(
             RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_height)
         )
@@ -256,7 +197,6 @@ class MainActivityTest {
             height.toString().toInt(), allOf(greaterThanOrEqualTo(140), lessThanOrEqualTo(180))
         )
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
 
@@ -278,12 +218,6 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         var age = getText(
             RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_age)
         )
@@ -291,7 +225,6 @@ class MainActivityTest {
             age.toString().toInt(), allOf(greaterThanOrEqualTo(35), lessThanOrEqualTo(45))
         )
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     private fun getText(withId: Matcher<View>?): CharSequence? {

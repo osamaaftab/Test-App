@@ -1,5 +1,6 @@
 package com.osamaaftab.filtering.Interactor
 
+import android.os.AsyncTask
 import com.osamaaftab.filtering.contractor.UserListContractor
 import com.osamaaftab.filtering.repository.remote.UserServices
 import com.osamaaftab.filtering.ui.model.FilterModel
@@ -24,7 +25,7 @@ class UserListInteractor @Inject constructor(
     override fun getResetUserListData(response: UserListContractor.IIntractor.OnResponse) {
         mDisposable.add(
             userServices.getUserList()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<UserModel>() {
                     override fun onSuccess(list: UserModel) {
@@ -62,7 +63,7 @@ class UserListInteractor @Inject constructor(
 
         mDisposable.add(
             userServices.getUserFilterList(filterModel)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<UserModel>() {
                     override fun onSuccess(list: UserModel) {
@@ -80,7 +81,7 @@ class UserListInteractor @Inject constructor(
     override fun getInitialUserListData(response: UserListContractor.IIntractor.OnResponse) {
         mDisposable.add(
             userServices.getUserList()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<UserModel>() {
                     override fun onSuccess(list: UserModel) {
