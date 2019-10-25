@@ -27,9 +27,11 @@ import com.osamaaftab.filtering.ViewActions.ViewActions
 import com.osamaaftab.filtering.repository.remote.ElapsedTimeIdlingResource
 import com.osamaaftab.filtering.repository.remote.RecyclerViewMatcher
 import com.warkiz.widget.IndicatorSeekBar
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.greaterThanOrEqualTo
 import org.hamcrest.Matchers.lessThanOrEqualTo
 
 
@@ -183,6 +185,41 @@ class MainActivityTest {
         IdlingRegistry.getInstance().unregister(idlingResource)
 
 
+    }
+
+
+    @Test
+    fun onFilterListWithAgeRange() {
+
+        onView(withId(R.id.filter))
+            .perform(click())
+
+        onView(withId(R.id.in_contact_switch))
+            .perform(click())
+
+        onView(withId(R.id.in_fav_switch))
+            .perform(click())
+
+        onView(withId(R.id.age_range_seek)).perform(scrollTo())
+            .perform(ViewActions.setRange(35, 45))
+
+        onView(withId(R.id.apply)).perform(scrollTo())
+            .perform(click())
+
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
+        IdlingRegistry.getInstance().register(idlingResource)
+
+        var age = getText(
+            RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_age)
+        )
+        assertThat(
+            age.toString().toInt(), allOf(greaterThanOrEqualTo(35), lessThanOrEqualTo(45))
+        )
+
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     private fun getText(withId: Matcher<View>?): CharSequence? {
