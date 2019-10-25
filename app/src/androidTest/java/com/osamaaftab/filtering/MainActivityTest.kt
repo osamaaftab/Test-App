@@ -16,14 +16,12 @@ import org.junit.Before
 import android.text.format.DateUtils
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import com.osamaaftab.filtering.repository.remote.ElapsedTimeIdlingResource
 import com.osamaaftab.filtering.repository.remote.RecyclerViewMatcher
 import org.hamcrest.CoreMatchers.not
-import com.osamaaftab.filtering.R
 
 
 @RunWith(AndroidJUnit4::class)
@@ -60,61 +58,65 @@ class MainActivityTest {
 
     @Test
     fun onFilterListWithPhotoEnabled() {
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
         val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        onWait(idlingResource)
+        IdlingRegistry.getInstance().register(idlingResource)
+
         onView(withId(R.id.filter))
             .perform(click())
+
+        IdlingRegistry.getInstance().unregister(idlingResource)
+
 
         onView(withId(R.id.has_photo_switch))
             .perform(click())
 
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
+        IdlingRegistry.getInstance().register(idlingResource)
 
-        onWait(idlingResource)
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture))
             .check(matches(isDisplayed()))
-        onDeRegister(idlingResource)
-
-    }
-
-
-    private fun onWait(idlingResource: IdlingResource) {
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        IdlingRegistry.getInstance().register(idlingResource)
-    }
-
-    private fun onDeRegister(idlingResource: IdlingResource) {
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
+
     @Test
     fun onFilterListWithIsContactEnabled() {
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
         val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        onWait(idlingResource)
+        IdlingRegistry.getInstance().register(idlingResource)
         onView(withId(R.id.filter))
             .perform(click())
+        IdlingRegistry.getInstance().unregister(idlingResource)
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
 
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
+        IdlingRegistry.getInstance().register(idlingResource)
 
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_contact))
             .check(matches(withText(not("0"))))
 
-        onDeRegister(idlingResource)
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
     fun onFilterListWithIsFavEnabled() {
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
         val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        onWait(idlingResource)
+        IdlingRegistry.getInstance().register(idlingResource)
         onView(withId(R.id.filter))
             .perform(click())
+        IdlingRegistry.getInstance().unregister(idlingResource)
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
@@ -124,11 +126,13 @@ class MainActivityTest {
 
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
+        IdlingRegistry.getInstance().register(idlingResource)
+
 
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_fav))
-            .check(matches(withText(("true"))))
+            .check(matches(withText(("false"))))
 
-        onDeRegister(idlingResource)
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
 }
