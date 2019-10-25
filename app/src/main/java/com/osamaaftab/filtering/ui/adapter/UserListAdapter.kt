@@ -29,7 +29,7 @@ class UserListAdapter @Inject constructor(var context: Context) :
         viewHolder.score.text = (userList[pos].compatibility_score?.times(100)).toString()
         viewHolder.user_contact.text = userList[pos].contacts_exchanged.toString()
         viewHolder.lat.text = userList[pos].city!!.lat.toString()
-        viewHolder.lon.text = userList[pos].city!!.log.toString()
+        viewHolder.lon.text = userList[pos].city!!.lon.toString()
         Glide.with(context).load(userList[pos].main_photo).into(viewHolder.userPicture)
     }
 

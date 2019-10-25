@@ -283,7 +283,7 @@ public class InteractorTest {
         double lon = -1.778197;
 
         for (int i = 0; i < epectedResponse.size(); i++) {
-            assertThat(getDistanceFromLatLonInKm(userModelExpected.getMatches().get(i).getCity().getLat(), userModelExpected.getMatches().get(i).getCity().getLog(), lat, lon), lessThanOrEqualTo(radius));
+            assertThat(getDistanceFromLatLonInKm(userModelExpected.getMatches().get(i).getCity().getLat(), userModelExpected.getMatches().get(i).getCity().getLon(), lat, lon), lessThanOrEqualTo(radius));
         }
     }
 
