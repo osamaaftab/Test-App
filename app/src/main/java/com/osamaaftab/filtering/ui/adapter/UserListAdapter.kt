@@ -28,7 +28,8 @@ class UserListAdapter @Inject constructor(var context: Context) :
         viewHolder.height.text = userList[pos].height_in_cm.toString()
         viewHolder.score.text = (userList[pos].compatibility_score?.times(100)).toString()
         viewHolder.user_contact.text = userList[pos].contacts_exchanged.toString()
-
+        viewHolder.lat.text = userList[pos].city!!.lat.toString()
+        viewHolder.lon.text = userList[pos].city!!.log.toString()
         Glide.with(context).load(userList[pos].main_photo).into(viewHolder.userPicture)
     }
 
@@ -63,5 +64,7 @@ class UserListAdapter @Inject constructor(var context: Context) :
         val height = view.user_height
         val user_contact = view.user_contact
         val score = view.user_score
+        val lat = view.user_lat
+        val lon = view.user_lon
     }
 }

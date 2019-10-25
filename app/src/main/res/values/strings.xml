@@ -25,5 +25,7 @@
     <string name="text_toolbar_title">Logged in as Sharon</string>
     <string name="text_network_error">Network Error!!!</string>
     <string name="text_filter_desc">Filtering</string>
+    <string name="text_latitute">latitude :</string>
+    <string name="text_longitude">longitude :</string>
 
 </resources>

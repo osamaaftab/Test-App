@@ -58,47 +58,44 @@ class MainActivityTest {
 
     @Test
     fun onFilterListWithPhotoEnabled() {
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
-
         onView(withId(R.id.filter))
             .perform(click())
-
-        IdlingRegistry.getInstance().unregister(idlingResource)
-
 
         onView(withId(R.id.has_photo_switch))
             .perform(click())
 
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
-        IdlingRegistry.getInstance().register(idlingResource)
-
-        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture))
-            .check(matches(isDisplayed()))
-        IdlingRegistry.getInstance().unregister(idlingResource)
-    }
 
 
-    @Test
-    fun onFilterListWithIsContactEnabled() {
         IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
         IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
 
         val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
         IdlingRegistry.getInstance().register(idlingResource)
+
+        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture))
+            .check(matches(isDisplayed()))
+
+        IdlingRegistry.getInstance().unregister(idlingResource)
+    }
+
+    @Test
+    fun onFilterListWithIsContactEnabled() {
         onView(withId(R.id.filter))
             .perform(click())
-        IdlingRegistry.getInstance().unregister(idlingResource)
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
 
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
+
+
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
         IdlingRegistry.getInstance().register(idlingResource)
 
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_contact))
@@ -109,14 +106,8 @@ class MainActivityTest {
 
     @Test
     fun onFilterListWithIsFavEnabled() {
-        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
-
-        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
-        IdlingRegistry.getInstance().register(idlingResource)
         onView(withId(R.id.filter))
             .perform(click())
-        IdlingRegistry.getInstance().unregister(idlingResource)
 
         onView(withId(R.id.in_contact_switch))
             .perform(click())
@@ -126,11 +117,16 @@ class MainActivityTest {
 
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
+
+
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
         IdlingRegistry.getInstance().register(idlingResource)
 
-
         onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_fav))
-            .check(matches(withText(("false"))))
+            .check(matches(withText(("true"))))
 
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
