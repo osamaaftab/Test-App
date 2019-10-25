@@ -2,11 +2,14 @@ package com.osamaaftab.filtering;
 
 import com.osamaaftab.filtering.Interactor.UserListInteractor;
 import com.osamaaftab.filtering.contractor.UserListContractor;
+import com.osamaaftab.filtering.di.component.DaggerJClassComponent;
+import com.osamaaftab.filtering.di.module.JClassModule;
 import com.osamaaftab.filtering.repository.remote.UserServices;
 import com.osamaaftab.filtering.ui.model.FilterModel;
 import com.osamaaftab.filtering.ui.model.UserCity;
 import com.osamaaftab.filtering.ui.model.UserData;
 import com.osamaaftab.filtering.ui.model.UserModel;
+import com.osamaaftab.filtering.util.Util;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
@@ -15,6 +18,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.schedulers.ExecutorScheduler;
 import io.reactivex.plugins.RxJavaPlugins;
+import kotlin.jvm.JvmField;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +43,10 @@ public class InteractorTest {
     @Mock
     UserServices userServices;
 
+    @Inject
+    @JvmField
+    Util util;
+
     @Mock
     FilterModel filterModel;
 
@@ -47,6 +56,9 @@ public class InteractorTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        DaggerJClassComponent.builder().jClassModule(new JClassModule()).build().inject(this);
+
         Scheduler immediate = new Scheduler() {
             @Override
             public Disposable scheduleDirect(@NonNull Runnable run, long delay, @NonNull TimeUnit unit) {
@@ -283,7 +295,7 @@ public class InteractorTest {
         double lon = -1.778197;
 
         for (int i = 0; i < epectedResponse.size(); i++) {
-            assertThat(getDistanceFromLatLonInKm(userModelExpected.getMatches().get(i).getCity().getLat(), userModelExpected.getMatches().get(i).getCity().getLon(), lat, lon), lessThanOrEqualTo(radius));
+            assertThat(util.getDistanceFromLatLonInKm(userModelExpected.getMatches().get(i).getCity().getLat(), userModelExpected.getMatches().get(i).getCity().getLon(), lat, lon), lessThanOrEqualTo(radius));
         }
     }
 
@@ -292,22 +304,5 @@ public class InteractorTest {
     public void onDistroy() throws Exception {
         userListInteractor.onDisposable();
         Mockito.verify(compositeDisposable, times(1)).clear();
-    }
-
-    private double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
-        double R = 6371; // Radius of the earth in km
-        double dLat = deg2rad(lat2 - lat1);  // deg2rad below
-        double dLon = deg2rad(lon2 - lon1);
-        double a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double d = R * c; // Distance in km
-        return d;
-    }
-
-    private double deg2rad(double deg) {
-        return deg * (Math.PI / 180);
     }
 }

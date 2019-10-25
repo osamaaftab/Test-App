@@ -48,10 +48,10 @@ dependencies {
     def daggerVersion = '2.21'
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-
     implementation 'io.reactivex.rxjava2:rxjava:2.1.13'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
@@ -86,4 +86,6 @@ dependencies {
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
+
+
 }
