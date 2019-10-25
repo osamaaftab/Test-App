@@ -146,6 +146,7 @@ class MainActivityTest {
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
+
     @Test
     fun onFilterListWithDistance() {
 
@@ -188,6 +189,74 @@ class MainActivityTest {
         )
         IdlingRegistry.getInstance().unregister(idlingResource)
 
+    }
+
+    @Test
+    fun onFilterListWithScoreRange() {
+
+        onView(withId(R.id.filter))
+            .perform(click())
+
+        onView(withId(R.id.in_contact_switch))
+            .perform(click())
+
+        onView(withId(R.id.in_fav_switch))
+            .perform(click())
+
+        onView(withId(R.id.score_range_seek)).perform(scrollTo())
+            .perform(ViewActions.setRange(5, 95))
+
+        onView(withId(R.id.apply)).perform(scrollTo())
+            .perform(click())
+
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
+        IdlingRegistry.getInstance().register(idlingResource)
+
+        var score = getText(
+            RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_score)
+        )
+        assertThat(
+            score.toString().toDouble(), allOf(greaterThanOrEqualTo(5.0), lessThanOrEqualTo(95.0))
+        )
+
+        IdlingRegistry.getInstance().unregister(idlingResource)
+    }
+
+    @Test
+    fun onFilterListWithHeightRange() {
+
+        onView(withId(R.id.filter))
+            .perform(click())
+
+        onView(withId(R.id.in_contact_switch))
+            .perform(click())
+
+        onView(withId(R.id.in_fav_switch))
+            .perform(click())
+
+        onView(withId(R.id.height_range_seek)).perform(scrollTo())
+            .perform(ViewActions.setRange(140, 180))
+
+        onView(withId(R.id.apply)).perform(scrollTo())
+            .perform(click())
+
+        IdlingPolicies.setMasterPolicyTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+        IdlingPolicies.setIdlingResourceTimeout((DateUtils.SECOND_IN_MILLIS * 8) * 2, TimeUnit.MILLISECONDS)
+
+        val idlingResource = ElapsedTimeIdlingResource(DateUtils.SECOND_IN_MILLIS * 8)
+        IdlingRegistry.getInstance().register(idlingResource)
+
+        var height = getText(
+            RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_height)
+        )
+        assertThat(
+            height.toString().toInt(), allOf(greaterThanOrEqualTo(140), lessThanOrEqualTo(180))
+        )
+
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
 
