@@ -58,6 +58,7 @@ class UserListPresenter @Inject constructor(
     }
 
     override fun onNoInternet() {
+        iView!!.onHideProgress()
         iView!!.onShowNoInternetError()
     }
 

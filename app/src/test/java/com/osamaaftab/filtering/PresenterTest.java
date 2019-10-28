@@ -52,6 +52,7 @@ public class PresenterTest {
     @Test
     public void onNoInternet() throws Exception {
         presenter.onNoInternet();
+        Mockito.verify(loginView, times(1)).onHideProgress();
         Mockito.verify(loginView, times(1)).onShowNoInternetError();
     }
 
