@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isDialog
@@ -60,7 +61,7 @@ class MainActivityTest {
             .perform(click())
 
 
-        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture))
+        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_picture)).inRoot(not(isDialog()))
             .check(matches(isDisplayed()))
 
     }
@@ -77,7 +78,7 @@ class MainActivityTest {
             .perform(click())
 
 
-        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_contact))
+        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_contact)).inRoot(not(isDialog()))
             .check(matches(withText(not("0"))))
 
     }
@@ -97,7 +98,7 @@ class MainActivityTest {
             .perform(click())
 
 
-        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_fav))
+        onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_fav)).inRoot(not(isDialog()))
             .check(matches(withText(("true"))))
 
     }
@@ -126,8 +127,22 @@ class MainActivityTest {
             .perform(click())
 
 
-        var lat = getText(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_lat))
-        var lon = getText(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_lon))
+        var lat = getText(
+            onView(
+                RecyclerViewMatcher(R.id.userList).atPositionOnView(
+                    0,
+                    R.id.user_lat
+                )
+            ).inRoot(not(isDialog()))
+        )
+        var lon = getText(
+            onView(
+                RecyclerViewMatcher(R.id.userList).atPositionOnView(
+                    0,
+                    R.id.user_lon
+                )
+            ).inRoot(not(isDialog()))
+        )
 
         assertThat(
             getDistanceFromLatLonInKm(
@@ -157,8 +172,9 @@ class MainActivityTest {
         onView(withId(R.id.apply)).perform(scrollTo())
             .perform(click())
 
+
         var score = getText(
-            RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_score)
+            onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_score)).inRoot(not(isDialog()))
         )
         assertThat(
             score.toString().toDouble(), allOf(greaterThanOrEqualTo(5.0), lessThanOrEqualTo(95.0))
@@ -184,7 +200,7 @@ class MainActivityTest {
             .perform(click())
 
         var height = getText(
-            RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_height)
+            onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_height)).inRoot(not(isDialog()))
         )
         assertThat(
             height.toString().toInt(), allOf(greaterThanOrEqualTo(140), lessThanOrEqualTo(180))
@@ -211,7 +227,7 @@ class MainActivityTest {
             .perform(click())
 
         var age = getText(
-            RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_age)
+            onView(RecyclerViewMatcher(R.id.userList).atPositionOnView(0, R.id.user_age)).inRoot(not(isDialog()))
         )
         assertThat(
             age.toString().toInt(), allOf(greaterThanOrEqualTo(35), lessThanOrEqualTo(45))
@@ -219,9 +235,9 @@ class MainActivityTest {
 
     }
 
-    private fun getText(withId: Matcher<View>?): CharSequence? {
+    private fun getText(withId: ViewInteraction): CharSequence? {
         val stringHolder = arrayOfNulls<String>(1)
-        onView(withId).perform(object : ViewAction {
+        withId.perform(object : ViewAction {
             override fun perform(uiController: UiController?, view: View?) {
                 val tv = view as TextView //Save, because of check in getConstraints()
                 stringHolder[0] = tv.text.toString()
